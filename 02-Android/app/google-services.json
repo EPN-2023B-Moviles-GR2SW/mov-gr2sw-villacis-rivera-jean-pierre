@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "905895992627",
+    "project_id": "b2023-gr2sw-jpvr",
+    "storage_bucket": "b2023-gr2sw-jpvr.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905895992627:android:0d2bc6794c48a3d233f246",
+        "android_client_info": {
+          "package_name": "com.example.b2023gr2sw"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJGXrriP-v-szgYul5sWHFHHgNyrV5J-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
