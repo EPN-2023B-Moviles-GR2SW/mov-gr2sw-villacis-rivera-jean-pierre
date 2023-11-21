@@ -49,7 +49,14 @@ fun main(){
     val sumaUno = Suma(1, 1)
     val sumaDos = Suma(null, 1)
     val sumaTres = Suma(1, null)
-
+    val sumaCuatro= Suma(null, null)
+    sumaUno.sumar()
+    sumaDos.sumar()
+    sumaTres.sumar()
+    sumaCuatro.sumar()
+    println(Suma.pi)
+    println(Suma.elevarAlCuadrado(2))
+    println(Suma.historialSumas)
 }
 
 
