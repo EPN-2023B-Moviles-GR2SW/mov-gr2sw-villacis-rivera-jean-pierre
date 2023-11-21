@@ -57,7 +57,69 @@ fun main(){
     println(Suma.pi)
     println(Suma.elevarAlCuadrado(2))
     println(Suma.historialSumas)
+
+    //Arreglo Estatico
+    val arregloEstatico: Array<Int> = arrayOf<Int>(1, 2, 3)
+        println(arregloEstatico)
+
+// Arreglo Dinámicos
+    val arregloDinamico: ArrayList<Int> = arrayListOf<Int>(
+        1,2,3,4,5,6,7,8,9,10
+    )
+    println(arregloDinamico)
+    arregloDinamico.add(11)
+    arregloDinamico.add(12)
+    println(arregloDinamico)
+
+    //FOR EACH
+// Iterar un arreglo
+
+    val respuestaForEach: Unit = arregloDinamico
+        .forEach{ valorActual: Int ->
+            println("Valor actual: ${valorActual}")
+        }
+    //it (eso) significa que el elemento iterado
+
+    arregloDinamico.forEach{println("Valor actual: ${it}")}
+    arregloEstatico
+        .forEachIndexed{ indice: Int, valorActual: Int ->
+            println("Valor ${valorActual} Indice: ${indice}")
+        }
+    println(respuestaForEach)
+
+// MAP -> yuta el arreglo (Cambia el arreglo)
+// 1) Enviemos el nuevo valor de la iteracion
+// 2) Nos devuelve es un NUEVO ARREGLO con los valores modificados
+
+    val respuestaMap: List<Double> = arregloDinamico
+        .map { valorActual: Int ->
+            return@map valorActual.toDouble()+ 100.00
+        }
+    println(respuestaMap)
+    val respuestaMapDos = arregloDinamico.map { it + 15 }
+
+    // Filter FILTRAR EL ARREGLO
+    // 1) Devolver una expresion (TRUE o FALSE)
+    // 2) Nuevo arreglo filtrado
+    val respuesaFilter: List<Int> = arregloDinamico
+        .filter { valorActual: Int ->
+            val mayoresACinco: Boolean = valorActual > 5
+            return@filter mayoresACinco
+        }
+    val respuestaFilterDos = arregloDinamico.filter {
+        it <= 5
+    }
+    println(respuesaFilter)
+    println(respuestaFilterDos)
 }
+
+
+
+
+
+
+
+
 
 
 abstract class NumerosJava{
