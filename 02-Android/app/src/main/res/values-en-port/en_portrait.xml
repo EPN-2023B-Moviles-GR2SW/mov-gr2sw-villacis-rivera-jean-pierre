@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">B2023gr2sw</string>
+    <string name="title_activity_aresources">AResources</string>
+    <string name="saludo">Good night</string>
+    <color name="colorText" translatable = "true">#696969</color>
+    <color name="colorBackgroud" translatable="true">#FF8E8E</color>
+
+</resources>
