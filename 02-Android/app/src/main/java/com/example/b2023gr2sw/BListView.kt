@@ -1,5 +1,6 @@
 package com.example.b2023gr2sw
 
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ContextMenu
@@ -10,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
 import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AlertDialog
 
 class BListView : AppCompatActivity() {
 
@@ -31,6 +33,7 @@ class BListView : AppCompatActivity() {
             .setOnClickListener {
               anadirEntrenador(adaptador)
             }
+        registerForContextMenu(listView)
     }
     fun anadirEntrenador(
         adaptador:ArrayAdapter<BEntrenador>
@@ -62,18 +65,53 @@ class BListView : AppCompatActivity() {
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         return when (item.itemId){
-            R.id.mi_editar ->{
+            R.id.mi_eliminar ->{
                 mostrarSnackbar("${posicionIteamSeleccionado}")
                 return true
             }
-            R.id.mi_eliminar ->{
+            R.id.mi_editar ->{
                 mostrarSnackbar("${posicionIteamSeleccionado}")
-                // abrir dialogo
+                abrirDialogo()
                 return true
             }
             else -> super.onContextItemSelected(item)
         }
     }
+
+    fun abrirDialogo(){
+        val builder= AlertDialog.Builder(this)
+        builder.setTitle("Desea eliminar")
+        builder.setPositiveButton(
+            "Aceptar",
+            DialogInterface.OnClickListener{dialog, which ->
+                mostrarSnackbar("Acepto ${which}")
+            }
+        )
+        builder.setNegativeButton(
+            "Cancelar",
+            null
+        )
+        val opciones = resources.getStringArray(
+            R.array.string_array_opciones_dialogo
+        )
+        val seleccionPrevia = booleanArrayOf(
+            true,
+            false,
+            false
+        )
+        builder.setMultiChoiceItems(
+            opciones,
+            seleccionPrevia,
+            { dialog,
+              which,
+              isChecked ->
+                mostrarSnackbar("Items: ${which}")
+            }
+        )
+        val dialogo = builder.create()
+        dialogo.show()
+    }
+
     fun mostrarSnackbar(texto:String){
         val snack = Snackbar.make(findViewById(R.id.lv_list_view),
             texto, Snackbar.LENGTH_LONG)
