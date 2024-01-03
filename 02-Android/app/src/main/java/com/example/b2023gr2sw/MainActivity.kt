@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     fun mostrarSnackbar(texto:String){
      Snackbar
          .make(
-             findViewById(R.id.id_layout_main),//view
+             findViewById(R.id.id_layou_main),//view
             texto, //texto
              Snackbar.LENGTH_LONG) //tiempo
 
@@ -64,6 +64,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView (R.layout.activity_main)
+       EBaseDatos.tablaEntrenador=ESqliteHelperEntrenador(
+           this
+       )
+
         val botonCicloVida = findViewById<Button>(btn_ciclo_vida)
         botonCicloVida
             .setOnClickListener{
@@ -92,6 +96,11 @@ class MainActivity : AppCompatActivity() {
                 abrirActividadConParametros(
                     CIntentExplicitoParametros::class.java)
 
+            }
+        val botonSqlite = findViewById<Button>(R.id.btn_sqlite)
+        botonSqlite
+            .setOnClickListener{
+                irActividad(ECrudEntrenador::class.java)
             }
     }
    fun abrirActividadConParametros(
