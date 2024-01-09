@@ -102,6 +102,11 @@ class MainActivity : AppCompatActivity() {
             .setOnClickListener{
                 irActividad(ECrudEntrenador::class.java)
             }
+        val botonRView = findViewById<Button>(R.id.btn_revcycle_view)
+        botonRView
+            .setOnClickListener{
+                irActividad(FRecyclerView::class.java)
+            }
     }
    fun abrirActividadConParametros(
        clase: Class<*>
