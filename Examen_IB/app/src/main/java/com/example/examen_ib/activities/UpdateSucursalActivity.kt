@@ -34,12 +34,12 @@ class UpdateSucursalActivity : AppCompatActivity() {
         )
 
         saveUpdatedData.setOnClickListener {
-            updateSeries()
+            updateSucursales()
             finish()
         }
     }
 
-    private fun updateSeries() {
+    private fun updateSucursales() {
         val inputCiudad = findViewById<EditText>(R.id.pt_update_ciudad)
         val inputDireccion = findViewById<EditText>(R.id.pt_sucursal_update_direccion)
         val inputFechaApertura = findViewById<EditText>(R.id.pt_sucursal_update_fecha_apertura)
