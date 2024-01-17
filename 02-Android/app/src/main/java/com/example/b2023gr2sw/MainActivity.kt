@@ -1,5 +1,6 @@
 package com.example.b2023gr2sw
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -61,6 +62,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView (R.layout.activity_main)
@@ -106,6 +108,11 @@ class MainActivity : AppCompatActivity() {
         botonRView
             .setOnClickListener{
                 irActividad(FRecyclerView::class.java)
+            }
+        val botonGoogleMaps = findViewById<Button>(R.id.boton_google_maps)
+        botonGoogleMaps
+            .setOnClickListener{
+                irActividad(GGoogleMapsActivity::class.java)
             }
     }
    fun abrirActividadConParametros(
