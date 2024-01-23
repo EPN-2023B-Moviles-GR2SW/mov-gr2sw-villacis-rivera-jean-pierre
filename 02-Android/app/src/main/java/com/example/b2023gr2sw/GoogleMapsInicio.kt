@@ -9,17 +9,17 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.example.b2023gr2sw.databinding.ActivityGoogleMapsInicio2Binding
+import com.example.b2023gr2sw.databinding.ActivityGoogleMapsInicioBinding
 
 class GoogleMapsInicio : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
-    private lateinit var binding: ActivityGoogleMapsInicio2Binding
+    private lateinit var binding: ActivityGoogleMapsInicioBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityGoogleMapsInicio2Binding.inflate(layoutInflater)
+        binding = ActivityGoogleMapsInicioBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
