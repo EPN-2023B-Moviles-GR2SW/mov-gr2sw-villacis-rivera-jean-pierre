@@ -96,4 +96,15 @@
         app:layout_constraintBottom_toTopOf="@+id/btn_revcycle_view"
         app:layout_constraintEnd_toEndOf="@+id/btn_revcycle_view"
         app:layout_constraintStart_toStartOf="@+id/btn_revcycle_view" />
+
+    <Button
+        android:id="@+id/btn_intent_firebase_ui"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="60dp"
+        android:text="F. AUT"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_ciclo_vida"
+        app:layout_constraintEnd_toStartOf="@+id/btn_ciclo_vida"
+        app:layout_constraintTop_toTopOf="@+id/btn_ciclo_vida"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
