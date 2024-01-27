@@ -14,6 +14,7 @@ class CreateSucursalActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_sucursal)
 
         val goBackButton = findViewById<ImageButton>(
+            
             R.id.go_back_to_supermercados_list
         )
 
