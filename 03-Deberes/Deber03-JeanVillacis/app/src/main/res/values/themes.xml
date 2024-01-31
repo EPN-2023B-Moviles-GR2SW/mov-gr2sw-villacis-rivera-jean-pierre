@@ -1,0 +1,16 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Deber03JeanVillacis" parent="Theme.Material3.DayNight.NoActionBar">
+<item name="colorPrimary">@color/green_dark</item>
+
+
+    </style>
+
+    <style name="Theme.Deber03JeanVillacis" parent="Base.Theme.Deber03JeanVillacis" />
+
+    <style name="BottomNavigation">
+        <item name="android:background">@color/green_dark</item>
+        <item name="itemIconTint">@color/green_light_2</item>
+        <item name="itemTextColor">@color/green_light_2</item>
+    </style>
+</resources>

@@ -1,0 +1,5 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FF0000" /> <!-- Este es el color rojo en formato hexadecimal -->
+    <corners android:radius="0dp" /> <!-- Si deseas esquinas redondeadas, ajusta el valor de "radius" según sea necesario -->
+    <size android:width="0dp" android:height="0dp" /> <!-- La anchura y la altura se ajustarán dinámicamente -->
+</shape>
