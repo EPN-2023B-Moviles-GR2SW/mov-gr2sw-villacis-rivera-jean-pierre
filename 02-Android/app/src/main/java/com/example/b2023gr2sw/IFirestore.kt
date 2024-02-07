@@ -33,7 +33,8 @@ class IFirestore : AppCompatActivity() {
         // Botones
         // Crear Datos Prueba
         val botonDatosPrueba = findViewById<Button>(
-            R.id.btn_fs_datos_prueba)
+            R.id.btn_fs_datos_prueba
+        )
         botonDatosPrueba.setOnClickListener { crearDatosPrueba() }
         // Order By
         val botonOrderBy = findViewById<Button>(R.id.btn_fs_order_by)
@@ -44,10 +45,172 @@ class IFirestore : AppCompatActivity() {
         botonObtenerDocumento.setOnClickListener {
             consultarDocumento(adaptador)
         }
+
+        // Crear datos
+        val botonCrear = findViewById<Button>(R.id.btn_fs_crear)
+        botonCrear.setOnClickListener { crearEjemplo() }
+
+
+        // Boton Eliminar
+        val botonFirebaseEliminar = findViewById<Button>(
+            R.id.btn_fs_eliminar
+        )
+        botonFirebaseEliminar.setOnClickListener {
+            eliminarRegistro()
+        }
+        // Empezar a paginar
+        val botonFirebaseEmpezarPaginar = findViewById<Button>(
+            R.id.btn_fs_epaginar
+        )
+        botonFirebaseEmpezarPaginar.setOnClickListener {
+            query = null; consultarCiudades(adaptador);
+        }
+        // Paginar
+        val botonFirebasePaginar = findViewById<Button>(
+            R.id.btn_fs_paginar
+        )
+        botonFirebasePaginar.setOnClickListener {
+            consultarCiudades(adaptador)
+        }
+
+        // Consultar indice compuesto
+        val botonIndiceCompuesto = findViewById<Button>(
+            R.id.btn_fs_ind_comp
+        )
+        botonIndiceCompuesto.setOnClickListener {
+            consultarIndiceCompuesto(adaptador)
+        }
+
     } // FIN ONCREATE
+
+
+    fun consultarIndiceCompuesto(
+        adaptador: ArrayAdapter<ICities>
+    ) {
+        val db = Firebase.firestore
+        val citiesRefUnico = db.collection("cities")
+        limpiarArreglo()
+        adaptador.notifyDataSetChanged()
+        citiesRefUnico
+            .whereEqualTo("capital", false)
+            .whereLessThanOrEqualTo("population", 4000000)
+            .orderBy("population", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener {
+                for (ciudad in it) {
+                    anadirAArregloCiudad(ciudad)
+                }
+                adaptador.notifyDataSetChanged()
+            }
+            .addOnFailureListener { }
+
+    }
+
+    fun consultarCiudades(
+        adaptador: ArrayAdapter<ICities>
+    ) {
+        val db = Firebase.firestore
+        val citiesRef = db.collection("cities")
+            .orderBy("population")
+            .limit(1)
+        var tarea: Task<QuerySnapshot>? = null
+        if (query == null) {
+            tarea = citiesRef.get() // 1era vez
+            limpiarArreglo()
+            adaptador.notifyDataSetChanged()
+        } else {
+            // consulta de la consulta anterior empezando en el nuevo documento
+            tarea = query!!.get()
+        }
+        if (tarea != null) {
+            tarea
+                .addOnSuccessListener { documentSnapshots ->
+                    guardarQuery(documentSnapshots, citiesRef)
+                    for (ciudad in documentSnapshots) {
+                        anadirAArregloCiudad(ciudad)
+                    }
+                    adaptador.notifyDataSetChanged()
+                }
+                .addOnFailureListener {
+                    // si hay fallos
+                }
+        }
+        // [4,5,6,1,2,3,7,8,9,10,11]
+        // [1,2,3] (limit = 3)
+        // [4,5,6] (limit = 3) (cursor =3)
+        // [7,8,9] (limit = 3) (cursor =6)
+        // [10,11] (limit = 3) (cursor =9)
+        // [] (limit = 3) (cursor =11)
+    }
+
+    fun eliminarRegistro() {
+        val db = Firebase.firestore
+        val referenciaEjemploEstudiante = db
+            .collection("ejemplo")
+
+        referenciaEjemploEstudiante
+            .document("12345678")
+            .delete() // elimina
+            .addOnCompleteListener { /* Si todo salio bien*/ }
+            .addOnFailureListener { /* Si algo salio mal*/ }
+    }
+
+    fun guardarQuery(
+        documentSnapshots: QuerySnapshot,
+        refCities: Query
+    ) {
+        if (documentSnapshots.size() > 0) {
+            val ultimoDocumento = documentSnapshots
+                .documents[documentSnapshots.size() - 1]
+            query = refCities
+                // Start After nos ayuda a paginar
+                .startAfter(ultimoDocumento)
+        }
+    }
+
+    fun crearEjemplo() {
+        val db = Firebase.firestore
+        val referenciaEjemploEstudiante = db
+            .collection("ejemplo")
+        // .document("id_hijo")
+        // .collection("estudiante")
+        val datosEstudiante = hashMapOf(
+            "nombre" to "Adrian",
+            "graduado" to false,
+            "promedio" to 14.00,
+            "direccion" to hashMapOf(
+                "direccion" to "Mitad del mundo",
+                "numeroCalle" to 1234
+            ),
+            "materias" to listOf("web", "moviles")
+        )
+
+
+        // identificador quemado (crear/actualizar)
+        referenciaEjemploEstudiante
+            .document("12345678")
+            .set(datosEstudiante)
+            .addOnSuccessListener { }
+            .addOnFailureListener { }
+        // identificador quemado pero autogenerado con Date().time
+        val identificador = Date().time
+        referenciaEjemploEstudiante // (crear/actualizar)
+            .document(identificador.toString())
+            .set(datosEstudiante)
+            .addOnSuccessListener { }
+            .addOnFailureListener { }
+        // Sin IDENTIFICADOR (crear)
+        referenciaEjemploEstudiante
+            .add(datosEstudiante)
+            .addOnCompleteListener { }
+            .addOnFailureListener { }
+
+
+    }
+
     fun consultarDocumento(
         adaptador: ArrayAdapter<ICities>
-    ){
+    ) {
         val db = Firebase.firestore
         val citiesRefUnico = db.collection("cities")
         limpiarArreglo()
@@ -76,23 +239,24 @@ class IFirestore : AppCompatActivity() {
                             it.data?.get("country") as String?,
                             it.data?.get("capital") as Boolean?,
                             it.data?.get("population") as Long?,
-                            it.data?.get("regions") as ArrayList<String>?,
+                            it.data?.get("regions") as
+                                    ArrayList<String>?,
                         )
                     )
                 adaptador.notifyDataSetChanged()
-
-
             }
             .addOnFailureListener {
                 // salio Mal
             }
     }
+
     fun limpiarArreglo() {
         arreglo.clear()
     }
+
     fun anadirAArregloCiudad(
         ciudad: QueryDocumentSnapshot
-    ){
+    ) {
         // ciudad.id
         val nuevaCiudad = ICities(
             ciudad.data.get("name") as String?,
@@ -107,7 +271,7 @@ class IFirestore : AppCompatActivity() {
 
     fun consultarConOrderBy(
         adaptador: ArrayAdapter<ICities>
-    ){
+    ) {
         val db = Firebase.firestore
         val citiesRefUnico = db.collection("cities")
         limpiarArreglo()
@@ -117,7 +281,7 @@ class IFirestore : AppCompatActivity() {
             .get()
             .addOnSuccessListener {
                 // it => eso (lo que llegue)
-                for (ciudad in it){
+                for (ciudad in it) {
                     ciudad.id
                     anadirAArregloCiudad(ciudad)
                 }
@@ -127,7 +291,8 @@ class IFirestore : AppCompatActivity() {
                 // Errores
             }
     }
-    fun crearDatosPrueba(){
+
+    fun crearDatosPrueba() {
         val db = Firebase.firestore
         // COPIAR EJEMPLO WEB
         val cities = db.collection("cities")
