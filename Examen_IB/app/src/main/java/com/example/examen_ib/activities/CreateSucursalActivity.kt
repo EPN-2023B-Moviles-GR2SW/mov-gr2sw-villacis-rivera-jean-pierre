@@ -9,6 +9,8 @@ import com.example.examen_ib.dtos.SucursalDto
 
 class CreateSucursalActivity : AppCompatActivity() {
     private val spinnerValues = arrayListOf<String>("Si", "No")
+
+    // todos los inputs
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_sucursal)
@@ -41,6 +43,7 @@ class CreateSucursalActivity : AppCompatActivity() {
     }
 
     private fun createSucursal(supermercadoId: String) {
+        // datos de la sucursal
         val inputCiudad = findViewById<EditText>(R.id.pt_sucursal_ciudad)
         val inputDireccion = findViewById<EditText>(R.id.pt_sucursal_direccion)
         val inputFechaApertura = findViewById<EditText>(R.id.pt_sucursal_fecha_apertura)

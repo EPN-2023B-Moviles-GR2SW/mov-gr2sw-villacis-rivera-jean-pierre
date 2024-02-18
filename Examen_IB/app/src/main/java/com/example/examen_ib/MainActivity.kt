@@ -36,9 +36,7 @@ class MainActivity : AppCompatActivity() {
         DB.supermercados = SupermercadoFirestore()
         DB.sucursales = SucursalFirestore()
 
-        // load streaming services
 
-//        loadSupermercados()
 
         val btnCreate = findViewById<Button>(
             R.id.btn_supermercados
@@ -49,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+// resume para  que se carge los supermercados
     override fun onResume() {
         super.onResume()
         loadSupermercados()
@@ -77,12 +75,12 @@ class MainActivity : AppCompatActivity() {
 
         supermercados = arrayListOf<Supermercado>()
         DB.supermercados!!.getAll()
-            .addOnSuccessListener { result ->
+            .addOnSuccessListener { result ->  // se obtiene los resultados
                 for (document in result) {
                     val supermercado = createSupermercadoFromDocument(document)
                     supermercados!!.add(supermercado)
                 }
-                if (supermercados != null) {
+                if (supermercados != null) { // arreglo
                     val adapter = ArrayAdapter(
                         this,
                         android.R.layout.simple_list_item_1,
