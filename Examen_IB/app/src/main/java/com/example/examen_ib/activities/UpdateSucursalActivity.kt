@@ -14,7 +14,9 @@ import com.example.examen_ib.dtos.SucursalDto
 
 
 class UpdateSucursalActivity : AppCompatActivity() {
+
     private val spinnerValues = arrayListOf<String>("Si", "No")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_sucursal)
@@ -34,12 +36,12 @@ class UpdateSucursalActivity : AppCompatActivity() {
         )
 
         saveUpdatedData.setOnClickListener {
-            updateSucursales()
+            updateSeries()
             finish()
         }
     }
 
-    private fun updateSucursales() {
+    private fun updateSeries() {
         val inputCiudad = findViewById<EditText>(R.id.pt_update_ciudad)
         val inputDireccion = findViewById<EditText>(R.id.pt_sucursal_update_direccion)
         val inputFechaApertura = findViewById<EditText>(R.id.pt_sucursal_update_fecha_apertura)
@@ -53,7 +55,8 @@ class UpdateSucursalActivity : AppCompatActivity() {
         val direccion = inputDireccion.text.toString()
         val fechaApertura = inputFechaApertura.text.toString()
         val servicioTecnico = spinnerServicioTecnico.selectedItem.toString() == "Si"
-        val numeroEmpleados = inputNumeroEmpleados.text.toString().toInt()
+        val numeroEmpleados = inputNumeroEmpleados.text.toString().toLong()
+        val supermercadoTitle = inputSupermercadoTitle.text.toString()
 
         val supermercadoId = intent.getStringExtra("supermercadoId").toString()
         val sucursalId = intent.getStringExtra("sucursalId").toString()
@@ -79,7 +82,7 @@ class UpdateSucursalActivity : AppCompatActivity() {
         val direccion = intent.getStringExtra("direccion")
         val fechaApertura = intent.getStringExtra("fechaApertura")
         val servicioTecnico = intent.getBooleanExtra("servicioTecnico", false)
-        val numeroEmpleados = intent.getIntExtra("numeroEmpleados", 0)
+        val numeroEmpleados = intent.getLongExtra("numeroEmpleados", 0)
 
         val inputCiudad = findViewById<EditText>(R.id.pt_update_ciudad)
         val inputDireccion = findViewById<EditText>(R.id.pt_sucursal_update_direccion)
@@ -112,6 +115,7 @@ class UpdateSucursalActivity : AppCompatActivity() {
         arrayAdapter.setDropDownViewResource(
             android.R.layout.simple_spinner_dropdown_item
         )
+
         spinnerIsSeriesFinished.adapter = arrayAdapter
         val selection = if (value) 0 else 1
         spinnerIsSeriesFinished.setSelection(selection)

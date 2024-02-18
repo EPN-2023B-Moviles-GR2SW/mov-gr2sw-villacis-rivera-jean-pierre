@@ -17,7 +17,7 @@ class CreateSupermercadoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_supermercado)
 
         // database
-        supermercados = DB.supermercados!!.getAll()
+//        supermercados = DB.supermercados!!.getAll()
 
         val goBackButton = findViewById<ImageButton>(R.id.btn_go_back)
 

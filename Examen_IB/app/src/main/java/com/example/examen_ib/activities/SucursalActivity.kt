@@ -15,11 +15,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.examen_ib.R
 import com.example.examen_ib.db.DB
+import com.example.examen_ib.db.SucursalFirestore
+import com.example.examen_ib.db.SupermercadoFirestore
 import com.example.examen_ib.models.Sucursal
+import com.example.examen_ib.models.Supermercado
 
 
 class SucursalActivity : AppCompatActivity() {
-
     private var sucursales: ArrayList<Sucursal>? = null
     var selectedSucursalId = ""
     var selectedItemId = 0
@@ -31,8 +33,10 @@ class SucursalActivity : AppCompatActivity() {
         selectedSucursalId = intent.getStringExtra("id").toString()
         println("streamingServiceId: $selectedSucursalId")
 
-        // load sucursales
-        loadSucursales(selectedSucursalId)
+        // load series
+//        loadSucursales(selectedSucursalId)
+
+
 
         // Buttons and Listeners
         val goBackButton = findViewById<ImageButton>(
@@ -48,14 +52,17 @@ class SucursalActivity : AppCompatActivity() {
         )
 
         createSucursalButton.setOnClickListener {
-            goToActivity(CreateSucursalActivity::class.java, Bundle().apply {
-                val supermercado = DB.supermercados!!.getOne(selectedSucursalId)
-                if (supermercado.getId() == selectedSucursalId) {
-                    putString("sucursalId", selectedSucursalId)
-                    putString("supermercadoId", supermercado.getId())
-                    putString("supermercadoName", supermercado.getNombre())
+            DB.supermercados!!.getOne(selectedSucursalId)
+                .addOnSuccessListener {
+                    val bundle = Bundle()
+                    val supermercado = SupermercadoFirestore.createSupermercadoFromDocument(it)
+                    if (supermercado.getId() == selectedSucursalId) {
+                        bundle.putString("sucursalId", selectedSucursalId)
+                        bundle.putString("supermercadoId", supermercado.getId())
+                        bundle.putString("supermercadoName", supermercado.getNombre())
+                    }
+                    goToActivity(CreateSucursalActivity::class.java, bundle)
                 }
-            })
         }
 
     }
@@ -76,24 +83,43 @@ class SucursalActivity : AppCompatActivity() {
 
     private fun loadSucursales(supermercadoId: String) {
         if (supermercadoId != "") {
-            val supermercado = DB.supermercados!!.getOne(supermercadoId)
+            val supermercado = Supermercado()
+            DB.supermercados!!.getOne(supermercadoId)
+                .addOnSuccessListener {
+                    val foundSupermercado = SupermercadoFirestore.createSupermercadoFromDocument(it)
+                    supermercado.setId(foundSupermercado.getId())
+                    supermercado.setNombre(foundSupermercado.getNombre())
+                    supermercado.setRuc(foundSupermercado.getRuc())
+                    supermercado.setVendeTecnologia(foundSupermercado.getVendeTecnologia())
 
-            if (supermercado.getId() == supermercadoId) {
-                sucursales = DB.sucursales!!.getAllBySupermercado(supermercadoId)
+                    if (supermercado.getId() == supermercadoId) {
+                        val tvTitle = findViewById<TextView>(R.id.tv_supermercado)
+                        tvTitle.text = supermercado.getNombre()
 
-                val tvTitle = findViewById<TextView>(R.id.tv_supermercado)
-                tvTitle.text = supermercado.getNombre()
-                val sucursalesList = findViewById<ListView>(R.id.lv_sucursales)
-                val adapter = ArrayAdapter(
-                    this,
-                    android.R.layout.simple_list_item_1,
-                    sucursales!!
-                )
-                sucursalesList.adapter = adapter
-                adapter.notifyDataSetChanged()
-                registerForContextMenu(sucursalesList)
-            }
+                        sucursales = arrayListOf<Sucursal>()
+                        DB.sucursales!!.getAllBySupermercado(supermercadoId)
+                            .addOnSuccessListener { documents ->
+                                for (document in documents) {
+                                    sucursales!!.add(SucursalFirestore.createSucursalFromDocument(document))
+                                }
 
+                                val sucursalesList = findViewById<ListView>(R.id.lv_sucursales)
+
+                                val adapter = ArrayAdapter(
+                                    this,
+                                    android.R.layout.simple_list_item_1,
+                                    sucursales!!
+                                )
+
+                                sucursalesList.adapter = adapter
+                                adapter.notifyDataSetChanged()
+                                registerForContextMenu(sucursalesList)
+                            }
+                            .addOnFailureListener {
+                                println("Error getting documents: $it")
+                            }
+                    }
+                }
         }
     }
 
@@ -133,20 +159,23 @@ class SucursalActivity : AppCompatActivity() {
         val selectedSucursal = sucursales!![selectedItemId]
         return when(item.itemId) {
             R.id.mi_edit_series -> {
-                val supermercado = DB.supermercados!!.getOne(selectedSucursalId)
-                goToActivity(
-                    UpdateSucursalActivity::class.java,
-                    Bundle().apply {
-                        putString("supermercadoId", selectedSucursalId)
-                        putString("supermercadoName", supermercado.getNombre())
-                        putString("sucursalId", selectedSucursal.getId())
-                        putString("ciudad", selectedSucursal.getCiudad())
-                        putString("direccion", selectedSucursal.getDireccion())
-                        putBoolean("servicioTecnico", selectedSucursal.getServicioTecnico())
-                        putInt("numeroEmpleados", selectedSucursal.getNumeroEmpleados())
-                        putString("fechaApertura", selectedSucursal.getFechaApertura())
+                DB.supermercados!!.getOne(selectedSucursalId)
+                    .addOnSuccessListener {
+                        val supermercado = SupermercadoFirestore.createSupermercadoFromDocument(it)
+                        goToActivity(
+                            UpdateSucursalActivity::class.java,
+                            Bundle().apply {
+                                putString("supermercadoId", selectedSucursalId)
+                                putString("supermercadoName", supermercado.getNombre())
+                                putString("sucursalId", selectedSucursal.getId())
+                                putString("ciudad", selectedSucursal.getCiudad())
+                                putString("direccion", selectedSucursal.getDireccion())
+                                putBoolean("servicioTecnico", selectedSucursal.getServicioTecnico())
+                                putLong("numeroEmpleados", selectedSucursal.getNumeroEmpleados())
+                                putString("fechaApertura", selectedSucursal.getFechaApertura())
+                            }
+                        )
                     }
-                )
                 true
             }
             R.id.mi_delete_series -> {
@@ -156,4 +185,5 @@ class SucursalActivity : AppCompatActivity() {
             else -> super.onContextItemSelected(item)
         }
     }
+
 }

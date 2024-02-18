@@ -51,7 +51,7 @@ class CreateSucursalActivity : AppCompatActivity() {
         val direccion = inputDireccion.text.toString()
         val fechaApertura = inputFechaApertura.text.toString()
         val servicioTecnico = spinnerServicioTecnico.selectedItem.toString() == "Si"
-        val numeroEmpleados = inputNumeroEmpleados.text.toString().toInt()
+        val numeroEmpleados = inputNumeroEmpleados.text.toString().toLong()
 
 
         val newSucursal = SucursalDto(

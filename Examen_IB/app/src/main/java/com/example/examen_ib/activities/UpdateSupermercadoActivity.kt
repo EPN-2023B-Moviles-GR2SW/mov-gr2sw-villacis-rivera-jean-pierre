@@ -25,7 +25,6 @@ class UpdateSupermercadoActivity : AppCompatActivity() {
         goBackButton.setOnClickListener {
             finish()
         }
-
         val saveUpdateDataButton = findViewById<Button>(R.id.btn_update_supermercado)
 
         saveUpdateDataButton.setOnClickListener {
@@ -70,7 +69,10 @@ class UpdateSupermercadoActivity : AppCompatActivity() {
             vendeTecnologia = vendeTech
         )
 
-        DB.supermercados!!.update(supermercadoId!!, changes)
+        if (supermercadoId != null) {
+            DB.supermercados!!.update(supermercadoId, changes)
+        }
+
 
         finish()
     }

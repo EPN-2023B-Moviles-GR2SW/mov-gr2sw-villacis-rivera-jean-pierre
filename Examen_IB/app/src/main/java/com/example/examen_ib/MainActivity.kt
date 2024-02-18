@@ -17,7 +17,11 @@ import com.example.examen_ib.activities.UpdateSupermercadoActivity
 import com.example.examen_ib.db.DB
 import com.example.examen_ib.db.SqliteHelperSucursal
 import com.example.examen_ib.db.SqliteHelperSupermercado
+import com.example.examen_ib.db.SucursalFirestore
+import com.example.examen_ib.db.SupermercadoFirestore
+import com.example.examen_ib.models.Sucursal
 import com.example.examen_ib.models.Supermercado
+import com.google.firebase.firestore.QueryDocumentSnapshot
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,12 +33,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // database
-        DB.supermercados = SqliteHelperSupermercado(this)
-        DB.sucursales = SqliteHelperSucursal(this)
+        DB.supermercados = SupermercadoFirestore()
+        DB.sucursales = SucursalFirestore()
 
         // load streaming services
 
-        loadSupermercados()
+//        loadSupermercados()
 
         val btnCreate = findViewById<Button>(
             R.id.btn_supermercados
@@ -51,24 +55,45 @@ class MainActivity : AppCompatActivity() {
         loadSupermercados()
     }
 
+    private fun createSupermercadoFromDocument(document: QueryDocumentSnapshot): Supermercado {
+        val id = document.id
+        val ruc = document.data["ruc"] as String?
+        val name = document.data["nombre"] as String?
+        val phone = document.data["telefono"] as String?
+        val vendeTecnologia = document.data["vendeTecnologia"] as Boolean?
+        val sucursal = mutableListOf<Sucursal>()
+
+        if (id == null || name == null || ruc == null || phone == null || vendeTecnologia == null) {
+            return Supermercado()
+        }
+
+        return Supermercado(id, ruc, name, phone, vendeTecnologia, sucursal)
+    }
+
     private fun loadSupermercados() {
         val listView = findViewById<ListView>(
             R.id.lv_supermercados
         )
-        supermercados = DB.supermercados!!.getAll()
 
-        if (supermercados != null) {
-            val adapter = ArrayAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                supermercados!!
-            )
-            listView.adapter = adapter
+        supermercados = arrayListOf<Supermercado>()
+        DB.supermercados!!.getAll()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val supermercado = createSupermercadoFromDocument(document)
+                    supermercados!!.add(supermercado)
+                }
+                if (supermercados != null) {
+                    val adapter = ArrayAdapter(
+                        this,
+                        android.R.layout.simple_list_item_1,
+                        supermercados!!
+                    )
+                    listView.adapter = adapter
 
-            adapter.notifyDataSetChanged()
-            registerForContextMenu(listView)
-        }
-
+                    adapter.notifyDataSetChanged()
+                    registerForContextMenu(listView)
+                }
+            }
     }
 
 

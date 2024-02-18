@@ -43,7 +43,7 @@ class SqliteHelperSucursal(
         val id = (0..1000000).random()
         return id.toString()
     }
-
+/*
     fun getAll(): ArrayList<Sucursal> {
         val readableDatabase = readableDatabase
 
@@ -230,5 +230,7 @@ class SqliteHelperSucursal(
         writableDatabase.close()
 
         return result != -1
+
     }
+    */
 }

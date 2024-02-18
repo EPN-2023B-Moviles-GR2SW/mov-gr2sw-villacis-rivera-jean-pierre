@@ -8,7 +8,7 @@ class Sucursal (
     private var ciudad:String,
     private var direccion: String,
     private var servicioTecnico: Boolean,
-    private var numeroEmpleados: Int,
+    private var numeroEmpleados: Long,
     private var fechaApertura: String,
     private var supermercadoId: String,
 ){
@@ -26,7 +26,7 @@ class Sucursal (
     fun  getServicioTecnico():Boolean{
         return servicioTecnico
     }
-    fun  getNumeroEmpleados(): Int {
+    fun  getNumeroEmpleados(): Long {
         return numeroEmpleados
     }
 
@@ -49,7 +49,7 @@ class Sucursal (
         this.servicioTecnico = servicioTecnico
     }
 
-    fun setNumeroEmpleados(numeroEmpleados: Int){
+    fun setNumeroEmpleados(numeroEmpleados: Long){
         this.numeroEmpleados = numeroEmpleados
     }
 
